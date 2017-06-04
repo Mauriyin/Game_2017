@@ -69,8 +69,9 @@ static unsigned long	sGameObjNum;								// 游戏对象的个数
 																	// 飞船对象：因为是Player，所以单独声明，方便程序设计
 static GameObj* spShip1;
 static GameObj* spShip2;
-
+//纹理
 AEGfxTexture *Ship;
+AEGfxTexture *Ship1;
 // 剩余的飞船lives (lives 0 = game over)
 static long				sShipLives;
 
@@ -113,9 +114,9 @@ void Load1(void)
 	memset(sGameObjList, 0, sizeof(GameObj) * GAME_OBJ_NUM_MAX);
 	sGameObjNum = 0;
 
-	//
+	//纹理载入
 	Ship = AEGfxTextureLoad("w_3.png");
-
+	Ship1 = AEGfxTextureLoad("1.png");
 	// 创建基类的实例	
 	// =====================
 	// 飞船
@@ -143,21 +144,35 @@ void Load1(void)
 
 	AEGfxMeshStart();
 	AEGfxTriAdd(
-		0.5f, -0.5f, 0xFFFFFFFF, 0.0f, 0.0f,
-		-0.5f, 0.7f, 0xFFFFFFFF, 0.0f, 0.0f,
-		0.5f, 0.5f, 0xFFFFFFFF, 0.0f, 0.0f);
+		-20.5f, -20.5f, 0xFFFFFFFF, 0.0f, 1.0f,
+		20.5f, -20.5f, 0xFFFFFFFF, 1.0f, 1.0f,
+		-20.5f, 20.5f, 0xFFFFFFFF, 0.0f, 0.0f);
 	AEGfxTriAdd(
-		0.5f, -0.5f, 0xFFFFFFFF, 0.0f, 0.0f,
-		-0.5f, 0.7f, 0xFFFFFFFF, 0.0f, 0.0f,
-		-0.5f, -0.7f, 0xFFFFFFFF, 0.0f, 0.0f);
+		20.5f, -20.5f, 0xFFFFFFFF, 1.0f, 1.0f,
+		20.5f, 20.5f, 0xFFFFFFFF, 1.0f, 0.0f,
+		-20.5f, 20.5f, 0xFFFFFFFF, 0.0f, 0.0f);
 	pObjBase->pMesh = AEGfxMeshEnd();
 	AE_ASSERT_MESG(pObjBase->pMesh, "Failed to create object!!");
 
 	// =======================
-	// 子弹：尺寸很小，简化成三角形定义
+	// 子弹：飞船子弹 
 	// =======================
 	pObjBase = sGameObjBaseList + sGameObjBaseNum++;
 	pObjBase->type = TYPE_BULLET;
+
+	AEGfxMeshStart();
+	AEGfxTriAdd(
+		-0.5f, 0.5f, 0xFFFFF000, 0.0f, 0.0f,
+		-0.5f, -0.5f, 0xFFFFF000, 0.0f, 0.0f,
+		0.5f, 0.0f, 0xFFFFF000, 0.0f, 0.0f);
+
+	pObjBase->pMesh = AEGfxMeshEnd();
+	AE_ASSERT_MESG(pObjBase->pMesh, "Failed to create Bullet object!!");
+	// =======================
+	// 子弹：敌机子弹 
+	// =======================
+	pObjBase = sGameObjBaseList + sGameObjBaseNum++;
+	pObjBase->type = TYPE_BULLET1;
 
 	AEGfxMeshStart();
 	AEGfxTriAdd(
@@ -519,8 +534,10 @@ void Update1(void)
 			}
 			// 朝向
 			pObj->dirCurr = -1.5707f;
-
 			pObj->scale = (i + 1) * 10.0f;
+			
+
+
 			flag_enemy++;
 		}
 		phase++;
@@ -687,14 +704,21 @@ void Update1(void)
 			continue;
 
 		// 更新小行星位置
-		if (pInst->pObject->type == TYPE_ASTEROID)
+		if (pInst->pObject->type == TYPE_ASTEROID && (bul_gap % 50 == 0))
 		{
 			Vector2DSet(&added, 50.0f * (float)(frameTime)* cosf(pInst->dirCurr), 50.0f * (float)(frameTime)* sinf(pInst->dirCurr));
 			Vector2DAdd(&pInst->posCurr, &pInst->posCurr, &added);
+			GameObj* pBullet;
+			pBullet = gameObjCreate(TYPE_BULLET1, 3.0f, 0, 0, 0.0f);
+
+			AE_ASSERT(pBullet);
+			pBullet->posCurr.x = pInst->posCurr.x;//- 5.0f;
+			pBullet->posCurr.y = pInst->posCurr.y - 10.0f;
+			pBullet->dirCurr = pInst->dirCurr;
 		}
 
 		// 更新子弹位置
-		if (pInst->pObject->type == TYPE_BULLET)
+		if (pInst->pObject->type == TYPE_BULLET|| pInst->pObject->type == TYPE_BULLET1)
 		{
 			Vector2DSet(&added, BULLET_SPEED * (float)(frameTime)* cosf(pInst->dirCurr), BULLET_SPEED * (float)(frameTime)* sinf(pInst->dirCurr));
 			Vector2DAdd(&pInst->posCurr, &pInst->posCurr, &added);
@@ -760,7 +784,7 @@ void Update1(void)
 		}
 
 		// 删除超出屏幕边界的子弹
-		if (pInst->pObject->type == TYPE_BULLET)
+		if (pInst->pObject->type == TYPE_BULLET || pInst->pObject->type == TYPE_BULLET1)
 		{
 			if ((pInst->posCurr.x < winMinX) || (pInst->posCurr.x > winMaxX) || (pInst->posCurr.y < winMinY) || (pInst->posCurr.y > winMaxY))
 			{
@@ -835,7 +859,7 @@ void Update1(void)
 			continue;
 
 		// asteroid 与 ship / bullet / missile 的碰撞检测
-		if (pInst->pObject->type == TYPE_ASTEROID)
+		if (pInst->pObject->type == TYPE_BULLET1)
 		{
 			for (j = 0; j < GAME_OBJ_NUM_MAX; j++)
 			{
@@ -856,12 +880,45 @@ void Update1(void)
 
 						if (sShipLives <= 0)
 							// 重新开始关卡
-							Next = GS_Restart;
+							Next = GS_L2;
 						else
 						{
 							// 更新位置
 							pInstOther->posCurr.x = 100.0f;
-							pInstOther->posCurr.y = winMinY;
+							pInstOther->posCurr.y = 80.0f;
+						}
+					}
+				}
+			}
+		}
+
+		if (pInst->pObject->type == TYPE_ASTEROID)
+		{
+			for (j = 0; j < GAME_OBJ_NUM_MAX; j++)
+			{
+				pInstOther = sGameObjList + j;
+
+				// 跳过非活动对象和小行星自身
+				if ((pInstOther->flag & FLAG_ACTIVE) == 0 || (pInstOther->pObject->type == TYPE_ASTEROID))
+					continue;
+
+				// asteroid vs. ship
+				if (pInstOther->pObject->type == TYPE_SHIP || pInstOther->pObject->type == TYPE_SHIP1 )
+				{
+					// 碰撞检测
+					if (AETestCircleToCircle(&(pInst->posCurr), pInst->scale, &(pInstOther->posCurr), pInstOther->scale))
+					{
+						// 飞船击毁
+						sShipLives -= 1;
+
+						if (sShipLives <= 0)
+							// 重新开始关卡
+							Next = GS_Quit;
+						else
+						{
+							// 更新位置
+							pInstOther->posCurr.x = 100.0f;
+							pInstOther->posCurr.y = 80.0f;
 						}
 					}
 					continue;
@@ -964,8 +1021,29 @@ void Draw1(void)
 		// 跳过非活动对象
 		if ((pInst->flag & FLAG_ACTIVE) == 0)
 			continue;
+
+			
 		if (pInst->pObject->type == TYPE_SHIP)
+		{
+			AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+			AEGfxSetPosition(pInst->posCurr.x, pInst->posCurr.y);
+			AEGfxTextureSet(Ship, 0, 0);
+			AEGfxSetTransparency(1.0f);
+			AEGfxSetBlendColor(0.0f, 0.0f, 0.0f, 0.0f);
+			AEGfxMeshDraw(pInst->pObject->pMesh, AE_GFX_MDM_TRIANGLES);
 			continue;
+		}
+		if (pInst->pObject->type == TYPE_SHIP1)
+		{
+			AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+			AEGfxSetPosition(pInst->posCurr.x, pInst->posCurr.y);
+			AEGfxTextureSet(Ship1, 0, 0);
+			AEGfxSetTransparency(1.0f);
+			AEGfxSetBlendColor(0.0f, 0.0f, 0.0f, 0.0f);
+			AEGfxMeshDraw(pInst->pObject->pMesh, AE_GFX_MDM_TRIANGLES);
+			continue;
+		}
+		AEGfxSetRenderMode(AE_GFX_RM_COLOR);
 		// 设置绘制模式(Color or texture)
 		AEGfxSetBackgroundColor(0.0f, 0.0f, 0.0f);
 		// 设置所有参数(Color blend, textures, etc..)
@@ -975,12 +1053,7 @@ void Draw1(void)
 		// 绘制当前对象，使用函数：AEGfxMeshDraw
 		AEGfxMeshDraw(pInst->pObject->pMesh, AE_GFX_MDM_TRIANGLES);
 	}
-	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-	AEGfxSetPosition(spShip1->posCurr.x, spShip1->posCurr.y);
-	AEGfxTextureSet(Ship, 0, 0);
-	AEGfxSetTransparency(1.0f);
-	AEGfxSetBlendColor(0.0f, 0.0f, 0.0f, 0.0f);
-	AEGfxMeshDraw(spShip1->pObject->pMesh, AE_GFX_MDM_TRIANGLES);
+
 }
 
 void Free1(void)
