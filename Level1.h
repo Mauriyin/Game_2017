@@ -21,9 +21,13 @@ enum TYPE
 	TYPE_SHIP1,
 	TYPE_BULLET,
 	TYPE_BULLET1,
-	TYPE_ASTEROID,
+	TYPE_ENEMY1,
 	TYPE_MISSILE,
 	TYPE_SKILL,
+	TYPE_ENEMY2,
+	TYPE_ENEMY3,
+	TYPE_BOSS,
+	TYPE_LIFE,
 	TYPE_NUM
 };
 //------------------------------------------------------------------------------

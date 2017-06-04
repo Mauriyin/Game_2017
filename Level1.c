@@ -69,9 +69,15 @@ static unsigned long	sGameObjNum;								// 游戏对象的个数
 																	// 飞船对象：因为是Player，所以单独声明，方便程序设计
 static GameObj* spShip1;
 static GameObj* spShip2;
+
 //纹理
 AEGfxTexture *Ship;
 AEGfxTexture *Ship1;
+AEGfxTexture *Boss;
+AEGfxTexture *Enemy1;
+AEGfxTexture *Enemy2;
+AEGfxTexture *Enemy3;
+AEGfxTexture *Skill;
 // 剩余的飞船lives (lives 0 = game over)
 static long				sShipLives;
 
@@ -91,6 +97,7 @@ unsigned int phase = 0;
 static int shipflag = 1;
 //技能有无标志
 static int skillflag = 1;
+static int skillState = 0;
 //------------------------------------------------------------------------------
 // Private Function Declarations:
 //------------------------------------------------------------------------------
@@ -115,8 +122,13 @@ void Load1(void)
 	sGameObjNum = 0;
 
 	//纹理载入
-	Ship = AEGfxTextureLoad("w_3.png");
-	Ship1 = AEGfxTextureLoad("1.png");
+	Ship = AEGfxTextureLoad("ship.png");
+	Ship1 = AEGfxTextureLoad("ship1.png");
+	Boss = AEGfxTextureLoad("boss.png");
+	Enemy1 = AEGfxTextureLoad("enemy1.png");
+	Enemy2 = AEGfxTextureLoad("enemy2.png");
+	Enemy3 = AEGfxTextureLoad("enemy3.png");
+	Skill = AEGfxTextureLoad("skill.png");
 	// 创建基类的实例	
 	// =====================
 	// 飞船
@@ -155,6 +167,7 @@ void Load1(void)
 	AE_ASSERT_MESG(pObjBase->pMesh, "Failed to create object!!");
 
 	// =======================
+	// =======================
 	// 子弹：飞船子弹 
 	// =======================
 	pObjBase = sGameObjBaseList + sGameObjBaseNum++;
@@ -187,35 +200,19 @@ void Load1(void)
 	// 小行星：用六个三角形拼成一个“圆形”
 	// =========================
 	pObjBase = sGameObjBaseList + sGameObjBaseNum++;
-	pObjBase->type = TYPE_ASTEROID;
+	pObjBase->type = TYPE_ENEMY1;
 
 	AEGfxMeshStart();
 	AEGfxTriAdd(
-		0.0f, 0.0f, 0x010000FF, 0.0f, 0.0f,
-		0.5f, 0.0f, 0xFF0000FF, 0.0f, 0.0f,
-		0.25f, 0.4f, 0xFF0000FF, 0.0f, 0.0f);
+		-20.5f, -20.5f, 0xFFFFFFFF, 0.0f, 1.0f,
+		20.5f, -20.5f, 0xFFFFFFFF, 1.0f, 1.0f,
+		-20.5f, 20.5f, 0xFFFFFFFF, 0.0f, 0.0f);
 	AEGfxTriAdd(
-		0.0f, 0.0f, 0x010000FF, 0.0f, 0.0f,
-		0.25f, 0.4f, 0xFF0000FF, 0.0f, 0.0f,
-		-0.25f, 0.4f, 0xFF0000FF, 0.0f, 0.0f);
-	AEGfxTriAdd(
-		0.0f, 0.0f, 0x010000FF, 0.0f, 0.0f,
-		-0.5f, 0.0f, 0xFF0000FF, 0.0f, 0.0f,
-		-0.25f, 0.4f, 0xFF0000FF, 0.0f, 0.0f);
-	AEGfxTriAdd(
-		0.0f, 0.0f, 0x010000FF, 0.0f, 0.0f,
-		0.5f, 0.0f, 0xFF0000FF, 0.0f, 0.0f,
-		0.25f, -0.4f, 0xFF0000FF, 0.0f, 0.0f);
-	AEGfxTriAdd(
-		0.0f, 0.0f, 0x010000FF, 0.0f, 0.0f,
-		0.25f, -0.4f, 0xFF0000FF, 0.0f, 0.0f,
-		-0.25f, -0.4f, 0xFF0000FF, 0.0f, 0.0f);
-	AEGfxTriAdd(
-		0.0f, 0.0f, 0x010000FF, 0.0f, 0.0f,
-		-0.5f, 0.0f, 0xFF0000FF, 0.0f, 0.0f,
-		-0.25f, -0.4f, 0xFF0000FF, 0.0f, 0.0f);
-
+		20.5f, -20.5f, 0xFFFFFFFF, 1.0f, 1.0f,
+		20.5f, 20.5f, 0xFFFFFFFF, 1.0f, 0.0f,
+		-20.5f, 20.5f, 0xFFFFFFFF, 0.0f, 0.0f);
 	pObjBase->pMesh = AEGfxMeshEnd();
+
 	AE_ASSERT_MESG(pObjBase->pMesh, "Failed to create Asteroid object!!");
 
 	// ========================
@@ -244,13 +241,13 @@ void Load1(void)
 
 	AEGfxMeshStart();
 	AEGfxTriAdd(
-		0.5f, 0.5f, 0xFFFFFF00, 0.0f, 0.0f,
-		0.5f, -0.5f, 0xFFFFFF00, 0.0f, 0.0f,
-		-0.5f, -0.5f, 0xFFFFFF00, 0.0f, 0.0f);
+		-20.5f, -20.5f, 0xFFFFFFFF, 0.0f, 1.0f,
+		20.5f, -20.5f, 0xFFFFFFFF, 1.0f, 1.0f,
+		-20.5f, 20.5f, 0xFFFFFFFF, 0.0f, 0.0f);
 	AEGfxTriAdd(
-		-0.5f, -0.5f, 0xFFFFFF00, 0.0f, 0.0f,
-		0.5f, 0.5f, 0xFFFFFF00, 0.0f, 0.0f,
-		-0.5f, 0.5f, 0xFFFFFF00, 0.0f, 0.0f);
+		20.5f, -20.5f, 0xFFFFFFFF, 1.0f, 1.0f,
+		20.5f, 20.5f, 0xFFFFFFFF, 1.0f, 0.0f,
+		-20.5f, 20.5f, 0xFFFFFFFF, 0.0f, 0.0f);
 	pObjBase->pMesh = AEGfxMeshEnd();
 	AE_ASSERT_MESG(pObjBase->pMesh, "Failed to create Asteroid object!!");
 }
@@ -314,7 +311,7 @@ void Update1(void)
 			GameObj* pObj1;
 
 			// 实例化
-			pObj = gameObjCreate(TYPE_ASTEROID, 1.0f, 0, 0, 0.0f);
+			pObj = gameObjCreate(TYPE_ENEMY1, 1.0f, 0, 0, 0.0f);
 
 			AE_ASSERT(pObj);
 
@@ -365,7 +362,7 @@ void Update1(void)
 					pObj1->posCurr.y = 150.0f;
 
 					pObj1->dirCurr = -1.5707f;
-					pObj1->scale = 10.0f;
+					pObj1->scale = 1.0f;
 					break;
 				}
 				break;
@@ -439,7 +436,7 @@ void Update1(void)
 					pObj1->posCurr.y = 150.0f;
 
 					pObj1->dirCurr = -1.5707f;
-					pObj1->scale = 10.0f;
+					pObj1->scale = 1.0f;
 					break;
 				}
 				break;
@@ -501,7 +498,7 @@ void Update1(void)
 					pObj1->posCurr.y = 150.0f;
 
 					pObj1->dirCurr = -1.5707f;
-					pObj1->scale = 10.0f;
+					pObj1->scale = 1.0f;
 					break;
 				}
 				break;
@@ -534,10 +531,8 @@ void Update1(void)
 			}
 			// 朝向
 			pObj->dirCurr = -1.5707f;
-			pObj->scale = (i + 1) * 10.0f;
-			
 
-
+			pObj->scale = (i+1)*10.0f;
 			flag_enemy++;
 		}
 		phase++;
@@ -650,45 +645,76 @@ void Update1(void)
 	// 空格键射击(创建一个子弹对象)
 	if (AEInputCheckCurr(VK_SPACE) && (bul_gap % 8 == 0))
 	{
-		GameObj* pBullet;
-		//GameObj* pBullet1;
-		// create a bullet
-		pBullet = gameObjCreate(TYPE_BULLET, 3.0f, 0, 0, 0.0f);
-		AE_ASSERT(pBullet);
-		pBullet->posCurr.x = spShip1->posCurr.x;//- 5.0f;
-		pBullet->posCurr.y = spShip1->posCurr.y;
-		pBullet->dirCurr = spShip1->dirCurr;
-		//pBullet1 = gameObjCreate(TYPE_BULLET, 3.0f, 0, 0, 0.0f);
-		/*AE_ASSERT(pBullet1);
-		pBullet1->posCurr.x = spShip1->posCurr.x+5.0f;
-		pBullet1->posCurr.y = spShip1->posCurr.y;
-		pBullet1->dirCurr = spShip1->dirCurr;*/
+		if(skillState == 0)
+		{
+			GameObj* pBullet;
+			pBullet = gameObjCreate(TYPE_BULLET, 3.0f, 0, 0, 0.0f);
+			AE_ASSERT(pBullet);
+			pBullet->posCurr.x = spShip1->posCurr.x;//- 5.0f;
+			pBullet->posCurr.y = spShip1->posCurr.y;
+			pBullet->dirCurr = spShip1->dirCurr;
+		}
+		if (skillState == 1 && bul_gap <= 0xff)
+		{
+			printf("%x",bul_gap);
+			if (bul_gap == 0xf8)
+			{
+				skillState = 0;
+				printf("reset");
+			}
+			GameObj* pBullet;
+			pBullet = gameObjCreate(TYPE_BULLET, 3.0f, 0, 0, 0.0f);
+			AE_ASSERT(pBullet);
+			pBullet->posCurr.x = spShip1->posCurr.x;//- 5.0f;
+			pBullet->posCurr.y = spShip1->posCurr.y;
+			pBullet->dirCurr = spShip1->dirCurr + 0.523f;
+			GameObj* pBullet1;
+
+			pBullet1 = gameObjCreate(TYPE_BULLET, 3.0f, 0, 0, 0.0f);
+			AE_ASSERT(pBullet1);
+			pBullet1->posCurr.x = spShip1->posCurr.x;//- 5.0f;
+			pBullet1->posCurr.y = spShip1->posCurr.y;
+			pBullet1->dirCurr = spShip1->dirCurr - 0.523f;
+			
+			GameObj* pBullet2;
+			pBullet2 = gameObjCreate(TYPE_BULLET, 3.0f, 0, 0, 0.0f);
+			AE_ASSERT(pBullet);
+			pBullet2->posCurr.x = spShip1->posCurr.x;//- 5.0f;
+			pBullet2->posCurr.y = spShip1->posCurr.y;
+			pBullet2->dirCurr = spShip1->dirCurr;
+
+		}
+		
+
 	}
 
 	// M键使用技能
 	//技能1：使用导弹
 	if (AEInputCheckTriggered('M') && (shipflag == 1) && skillflag)
 	{
-		GameObj* spMissile;
-
-		// 只允许生成一个导弹
-		if (!flag_missile)
+		for (i = 0; i < GAME_OBJ_NUM_MAX; i++)
 		{
-			// 创建导弹对象
-			spMissile = gameObjCreate(TYPE_MISSILE, 10.0f, 0, 0, 0.0f);
-			AE_ASSERT(spMissile);
-			spMissile->posCurr = spShip1->posCurr;
-			spMissile->dirCurr = spShip1->dirCurr;
+			GameObj* pInst = sGameObjList + i;
 
-			flag_missile = 1;
+			// 不理会非活动对象
+			if ((pInst->flag & FLAG_ACTIVE) == 0)
+				continue;
+			if (pInst->pObject->type == TYPE_ENEMY1 || pInst->pObject->type == TYPE_BULLET1)
+			{
+				pInst->flag = 0;
+				continue;
+			}
 		}
+		flag_enemy = 0;
 		skillflag--;
 	}
 	//技能2:暂定
-	if (AEInputCheckTriggered('M') && (shipflag == 2) && skillflag)
+	if (AEInputCheckTriggered('M') && (shipflag == 2) && skillflag )
 	{
+		skillState = 1;
+		skillflag--;
+		bul_gap = 0;
 
-		;
 	}
 
 	// ==================================================
@@ -704,9 +730,9 @@ void Update1(void)
 			continue;
 
 		// 更新小行星位置
-		if (pInst->pObject->type == TYPE_ASTEROID && (bul_gap % 50 == 0))
+		if (pInst->pObject->type == TYPE_ENEMY1 && (bul_gap % 50 == 0))
 		{
-			Vector2DSet(&added, 50.0f * (float)(frameTime)* cosf(pInst->dirCurr), 50.0f * (float)(frameTime)* sinf(pInst->dirCurr));
+			Vector2DSet(&added, 150.0f * (float)(frameTime)* cosf(pInst->dirCurr), 250.0f * (float)(frameTime)* sinf(pInst->dirCurr));
 			Vector2DAdd(&pInst->posCurr, &pInst->posCurr, &added);
 			GameObj* pBullet;
 			pBullet = gameObjCreate(TYPE_BULLET1, 3.0f, 0, 0, 0.0f);
@@ -718,7 +744,7 @@ void Update1(void)
 		}
 
 		// 更新子弹位置
-		if (pInst->pObject->type == TYPE_BULLET|| pInst->pObject->type == TYPE_BULLET1)
+		if (pInst->pObject->type == TYPE_BULLET || pInst->pObject->type == TYPE_BULLET1)
 		{
 			Vector2DSet(&added, BULLET_SPEED * (float)(frameTime)* cosf(pInst->dirCurr), BULLET_SPEED * (float)(frameTime)* sinf(pInst->dirCurr));
 			Vector2DAdd(&pInst->posCurr, &pInst->posCurr, &added);
@@ -749,7 +775,7 @@ void Update1(void)
 	//      -- 子弹间隔增长
 	// ===================================
 	bul_gap++;
-	if (bul_gap >= 0xffffffff)
+	if (bul_gap >= 0xfffff)
 	{
 		bul_gap = 0;
 	}
@@ -770,7 +796,7 @@ void Update1(void)
 		}
 
 		// 小行星：Wrap
-		if (pInst->pObject->type == TYPE_ASTEROID)
+		if (pInst->pObject->type == TYPE_ENEMY1)
 		{
 			pInst->posCurr.x = AEWrap(pInst->posCurr.x, winMinX - pInst->scale, winMaxX + pInst->scale);
 			pInst->posCurr.y = AEWrap(pInst->posCurr.y, winMinY - pInst->scale, winMaxY + pInst->scale);
@@ -812,7 +838,7 @@ void Update1(void)
 					pTarget = sGameObjList + j;
 
 					// 跳过非活动对象或非小行星对象
-					if ((pTarget->flag & FLAG_ACTIVE) == 0 || pTarget->pObject->type != TYPE_ASTEROID)
+					if ((pTarget->flag & FLAG_ACTIVE) == 0 || pTarget->pObject->type != TYPE_ENEMY1)
 						continue;
 
 					missile_target = j;
@@ -857,8 +883,7 @@ void Update1(void)
 		// 不处理非活动对象
 		if ((pInst->flag & FLAG_ACTIVE) == 0)
 			continue;
-
-		// asteroid 与 ship / bullet / missile 的碰撞检测
+		//ship和子弹的
 		if (pInst->pObject->type == TYPE_BULLET1)
 		{
 			for (j = 0; j < GAME_OBJ_NUM_MAX; j++)
@@ -866,7 +891,7 @@ void Update1(void)
 				pInstOther = sGameObjList + j;
 
 				// 跳过非活动对象和小行星自身
-				if ((pInstOther->flag & FLAG_ACTIVE) == 0 || (pInstOther->pObject->type == TYPE_ASTEROID))
+				if ((pInstOther->flag & FLAG_ACTIVE) == 0 || (pInstOther->pObject->type == TYPE_ENEMY1))
 					continue;
 
 				// asteroid vs. ship
@@ -880,7 +905,7 @@ void Update1(void)
 
 						if (sShipLives <= 0)
 							// 重新开始关卡
-							Next = GS_L2;
+							Next = GS_Quit;
 						else
 						{
 							// 更新位置
@@ -891,19 +916,19 @@ void Update1(void)
 				}
 			}
 		}
-
-		if (pInst->pObject->type == TYPE_ASTEROID)
+		// asteroid 与 ship / bullet / missile 的碰撞检测
+		if (pInst->pObject->type == TYPE_ENEMY1)
 		{
 			for (j = 0; j < GAME_OBJ_NUM_MAX; j++)
 			{
 				pInstOther = sGameObjList + j;
 
 				// 跳过非活动对象和小行星自身
-				if ((pInstOther->flag & FLAG_ACTIVE) == 0 || (pInstOther->pObject->type == TYPE_ASTEROID))
+				if ((pInstOther->flag & FLAG_ACTIVE) == 0 || (pInstOther->pObject->type == TYPE_ENEMY1))
 					continue;
 
 				// asteroid vs. ship
-				if (pInstOther->pObject->type == TYPE_SHIP || pInstOther->pObject->type == TYPE_SHIP1 )
+				if (pInstOther->pObject->type == TYPE_SHIP || pInstOther->pObject->type == TYPE_SHIP1)
 				{
 					// 碰撞检测
 					if (AETestCircleToCircle(&(pInst->posCurr), pInst->scale, &(pInstOther->posCurr), pInstOther->scale))
@@ -913,7 +938,7 @@ void Update1(void)
 
 						if (sShipLives <= 0)
 							// 重新开始关卡
-							Next = GS_Quit;
+							Next = GS_Restart;
 						else
 						{
 							// 更新位置
@@ -959,7 +984,7 @@ void Update1(void)
 				pInstOther = sGameObjList + j;
 
 				// 跳过非活动对象和小行星自身
-				if ((pInstOther->flag & FLAG_ACTIVE) == 0 || (pInstOther->pObject->type == TYPE_ASTEROID))
+				if ((pInstOther->flag & FLAG_ACTIVE) == 0 || (pInstOther->pObject->type == TYPE_ENEMY1))
 					continue;
 
 				// SKILL vs. SHIP
@@ -1038,6 +1063,56 @@ void Draw1(void)
 			AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 			AEGfxSetPosition(pInst->posCurr.x, pInst->posCurr.y);
 			AEGfxTextureSet(Ship1, 0, 0);
+			AEGfxSetTransparency(1.0f);
+			AEGfxSetBlendColor(0.0f, 0.0f, 0.0f, 0.0f);
+			AEGfxMeshDraw(pInst->pObject->pMesh, AE_GFX_MDM_TRIANGLES);
+			continue;
+		}
+		if (pInst->pObject->type == TYPE_ENEMY1)
+		{
+			AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+			AEGfxSetPosition(pInst->posCurr.x, pInst->posCurr.y);
+			AEGfxTextureSet(Enemy1, 0, 0);
+			AEGfxSetTransparency(1.0f);
+			AEGfxSetBlendColor(0.0f, 0.0f, 0.0f, 0.0f);
+			AEGfxMeshDraw(pInst->pObject->pMesh, AE_GFX_MDM_TRIANGLES);
+			continue;
+		}
+		if (pInst->pObject->type == TYPE_ENEMY2)
+		{
+			AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+			AEGfxSetPosition(pInst->posCurr.x, pInst->posCurr.y);
+			AEGfxTextureSet(Enemy2, 0, 0);
+			AEGfxSetTransparency(1.0f);
+			AEGfxSetBlendColor(0.0f, 0.0f, 0.0f, 0.0f);
+			AEGfxMeshDraw(pInst->pObject->pMesh, AE_GFX_MDM_TRIANGLES);
+			continue;
+		}
+		if (pInst->pObject->type == TYPE_ENEMY3)
+		{
+			AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+			AEGfxSetPosition(pInst->posCurr.x, pInst->posCurr.y);
+			AEGfxTextureSet(Enemy3, 0, 0);
+			AEGfxSetTransparency(1.0f);
+			AEGfxSetBlendColor(0.0f, 0.0f, 0.0f, 0.0f);
+			AEGfxMeshDraw(pInst->pObject->pMesh, AE_GFX_MDM_TRIANGLES);
+			continue;
+		}
+		if (pInst->pObject->type == TYPE_BOSS)
+		{
+			AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+			AEGfxSetPosition(pInst->posCurr.x, pInst->posCurr.y);
+			AEGfxTextureSet(Boss, 0, 0);
+			AEGfxSetTransparency(1.0f);
+			AEGfxSetBlendColor(0.0f, 0.0f, 0.0f, 0.0f);
+			AEGfxMeshDraw(pInst->pObject->pMesh, AE_GFX_MDM_TRIANGLES);
+			continue;
+		}
+		if (pInst->pObject->type == TYPE_SKILL)
+		{
+			AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+			AEGfxSetPosition(pInst->posCurr.x, pInst->posCurr.y);
+			AEGfxTextureSet(Skill, 0, 0);
 			AEGfxSetTransparency(1.0f);
 			AEGfxSetBlendColor(0.0f, 0.0f, 0.0f, 0.0f);
 			AEGfxMeshDraw(pInst->pObject->pMesh, AE_GFX_MDM_TRIANGLES);

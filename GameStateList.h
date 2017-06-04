@@ -24,11 +24,10 @@
 //------------------------------------------------------------------------------
 enum
 {
-	GS_L0,               //menu
+	GS_L0,
 	GS_L1,              // Level1
 	GS_L2,              // Level2
 	GS_NUM,             // Total Number
-	GS_Fail,
 	GS_Restart,			// Restart
 	GS_Quit				// Quit
 };
