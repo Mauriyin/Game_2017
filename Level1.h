@@ -17,10 +17,12 @@
 enum TYPE
 {
 	// 游戏对象类型列表
-	TYPE_SHIP = 0, 
+	TYPE_SHIP = 0,
+	TYPE_SHIP1,
 	TYPE_BULLET,
 	TYPE_ASTEROID,
 	TYPE_MISSILE,
+	TYPE_SKILL,
 	TYPE_NUM
 };
 //------------------------------------------------------------------------------
