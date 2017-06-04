@@ -9,6 +9,7 @@
 #include "System.h"
 #include "Level1.h"
 #include "Level2.h"
+#include "menu.h"
 
 //------------------------------------------------------------------------------
 // Private Consts:
@@ -47,6 +48,16 @@ void GSM_Update(int level)
 	// Function Pointer Point to functions
 	switch(level)
 	{
+	case GS_L0:
+	{
+		pLoad = Load0;
+		pIni = Ini0;
+		pUpdate = Update0;
+		pDraw = Draw0;
+		pFree = Free0;
+		pUnload = Unload0;
+		break;
+	}
 		case GS_L1:
 			{
 				pLoad = Load1;
@@ -58,6 +69,16 @@ void GSM_Update(int level)
 				break;
 			}
 			case GS_L2:
+			{
+				pLoad = Load1;
+				pIni = Ini1;
+				pUpdate = Update1;
+				pDraw = Draw1;
+				pFree = Free1;
+				pUnload = Unload1;
+				break;
+			}
+			case GS_Fail:
 			{
 				pLoad = Load2;
 				pIni = Ini2;
