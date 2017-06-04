@@ -27,7 +27,6 @@ enum TYPE
 	TYPE_ENEMY2,
 	TYPE_ENEMY3,
 	TYPE_BOSS,
-	TYPE_LIFE,
 	TYPE_NUM
 };
 //------------------------------------------------------------------------------
