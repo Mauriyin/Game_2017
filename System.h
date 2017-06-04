@@ -1,8 +1,7 @@
-/* Project:		StarWars
+/* Project:		GSMWin
    File Name:	System.h
-   Author:		阴浩
-   Date:		4.26  v1.0 引擎确认
-
+   Author:		刘芳
+   Date:		
    Purpose:		系统管理器
 */
 
