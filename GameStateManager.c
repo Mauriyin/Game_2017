@@ -68,17 +68,8 @@ void GSM_Update(int level)
 				pUnload = Unload1;
 				break;
 			}
+			
 			case GS_L2:
-			{
-				pLoad = Load1;
-				pIni = Ini1;
-				pUpdate = Update1;
-				pDraw = Draw1;
-				pFree = Free1;
-				pUnload = Unload1;
-				break;
-			}
-			case GS_Fail:
 			{
 				pLoad = Load2;
 				pIni = Ini2;
