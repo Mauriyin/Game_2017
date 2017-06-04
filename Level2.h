@@ -1,10 +1,8 @@
-/* Project:		StarWars
+/* Project:		GSMWin
    File Name:	Level2.h
-   Author:		阴浩
-   Date:		4.26  v1.0 引擎确认
-
-   Purpose:		关卡2的属性和函数声明
-*/
+   Author:		刘芳
+   Date:		
+   Purpose:		关卡2的属性和函数声明*/
 
 #ifndef _Level2
 #define _Level2
@@ -16,37 +14,7 @@
 //------------------------------------------------------------------------------
 // Public Consts:
 //------------------------------------------------------------------------------
-enum TYPE2
-{
-	// 游戏对象类型列表
-	//飞船
-	TYPE2_SHIP1 = 0,
-	TYPE2_SHIP2,
-	TYPE2_SHIP3,
-	//子弹
-	TYPE2_BULLET1,
-	TYPE2_BULLET2,
-	TYPE2_BULLET3,
-	TYPE2_BULLET4,
-	TYPE2_BULLET5,
-	//敌机
-	TYPE2_ENEMY1,
-	TYPE2_ENEMY2,
-	TYPE2_ENEMY3,
-	//技能
-	TYPE2_SKILL1,
-	TYPE2_SKILL2,
-	TYPE2_SKILL3,
-	TYPE2_SKILL4,
-	TYPE2_SKILL5,
-	//道具
-	TYPE2_GOLD,
-	TYPE2_SHIELD,
-	TYPE2_LASER,
-	TYPE2_INVIN,
 
-	TYPE2_NUM
-};
 //------------------------------------------------------------------------------
 // Public Structures:
 //------------------------------------------------------------------------------

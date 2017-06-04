@@ -1,10 +1,8 @@
-/* Project:		StarWars
+/* Project:		GSMWin
    File Name:	GameStateManager.h
-   Author:		阴浩
-   Date:		4.26  v1.0 引擎确认
-
-   Purpose:		游戏状态管理器
-*/
+   Author:		刘芳
+   Date:		
+   Purpose:		游戏状态管理器*/
 
 #ifndef _GameStateManager
 #define _GameStateManager
