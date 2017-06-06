@@ -12,7 +12,8 @@ Purpose:		   */
 #include "windef.h"
 #include "windows.h"
 #include "end.h"
-
+#include "Win.h"
+#include "Select.h"
 //------------------------------------------------------------------------------
 // Private Consts:
 //------------------------------------------------------------------------------
@@ -103,6 +104,12 @@ void Update0(void)
 	if (AEInputCheckTriggered('W'))
 	{
 		Next = GS_Help;
+		//Next = GS_Select;
+		return;
+	}
+	if (AEInputCheckTriggered('Y'))
+	{
+		Next = GS_Select;
 		return;
 	}
 	if (AEInputCheckTriggered('R'))
@@ -124,7 +131,7 @@ void Draw0(void)
 	AEGfxSetBlendColor(0.0f, 0.0f, 0.0, 0.0f);
 	// Drawing the mesh (list of triangles)
 	AEGfxMeshDraw(pMesh1, AE_GFX_MDM_TRIANGLES);
-	for (i = 0; i < 3; i++)
+	for (i = 0; i < 4; i++)
 	{
 		AEGfxSetPosition(20.0f, (i)*-80.0f);
 		switch (i)
@@ -137,6 +144,9 @@ void Draw0(void)
 			break;
 		case 2:
 			pTex2 = AEGfxTextureLoad("About.png");
+			break;
+		case 3:
+			pTex2 = AEGfxTextureLoad("Select.png");
 			break;
 		default:
 			break;

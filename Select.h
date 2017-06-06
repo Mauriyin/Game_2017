@@ -1,11 +1,13 @@
+#pragma once
+#pragma once
 /* Project:		GSMWin
-   File Name:	GameStateList.h
-   Author:		yh
-   Date:		
-   Purpose:		游戏状态声明，主要为Game Flow的状态切换所用 */
-
-#ifndef _GameStateList
-#define _GameStateList
+File Name:	end.h
+Author:dhr
+Date:
+Purpose:		主界面显示
+*/
+#ifndef _select
+#define _select
 
 //------------------------------------------------------------------------------
 // Typedef:
@@ -14,7 +16,14 @@
 //------------------------------------------------------------------------------
 // Public Consts:
 //------------------------------------------------------------------------------
+enum TYPE6
+{
+	// 游戏对象类型列表
+	TYPE6_IMAGE = 0,
+	TYPE6_BUTTON = 1,
 
+	TYPE6_NUM
+};
 //------------------------------------------------------------------------------
 // Public Structures:
 //------------------------------------------------------------------------------
@@ -22,24 +31,16 @@
 //------------------------------------------------------------------------------
 // Public Variables:
 //------------------------------------------------------------------------------
-enum
-{
-	GS_L0,               //menu
-	GS_L1,              // Level1
-	GS_L2,              // Level2
-	GS_NUM,             // Total Number
-	GS_Restart,			// Restart
-	GS_Quit,				// Quit
-	GS_Help,               //Help
-	GS_End,				//Over
-	GS_Win,				//Win
-	GS_Select				//Select 
-};
-
-int Current, Previous, Next;  // 状态指示器
 
 //------------------------------------------------------------------------------
 // Public Functions:
 //------------------------------------------------------------------------------
 
-#endif
+void Load9(void);
+void Ini9(void);
+void Update9(void);
+void Draw9(void);
+void Free9(void);
+void Unload9(void);
+
+#endif#pragma once
