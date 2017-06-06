@@ -1,6 +1,6 @@
 /* Project:		GSMWin
    File Name:	System.c
-   Author:		刘芳
+   Author:		yh
    Date:		
    Purpose:		系统管理器 */
 

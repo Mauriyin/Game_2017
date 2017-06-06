@@ -1,6 +1,6 @@
 /* Project:		GSMPre
    File Name:	Level2.c
-   Author:		刘芳
+   Author:		
    Date:		
    Purpose:		关卡2 展示游戏对象多帧动画效果
                 使用的图片是playerrun.png，该动图含8帧   */

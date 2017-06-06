@@ -1,7 +1,7 @@
 #pragma once
 /* Project:		GSMWin
 File Name:	menu.h
-Author:
+Author:dhr
 Date:
 Purpose:		主界面显示
 */

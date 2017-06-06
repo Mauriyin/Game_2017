@@ -1,11 +1,13 @@
+#pragma once
+#pragma once
 /* Project:		GSMWin
-   File Name:	Level2.h
-   Author:		
-   Date:		
-   Purpose:		关卡2的属性和函数声明*/
-
-#ifndef _Level2
-#define _Level2
+File Name:	end.h
+Author:dhr
+Date:
+Purpose:		主界面显示
+*/
+#ifndef _end
+#define _end
 
 //------------------------------------------------------------------------------
 // Typedef:
@@ -14,7 +16,14 @@
 //------------------------------------------------------------------------------
 // Public Consts:
 //------------------------------------------------------------------------------
+enum TYPE5
+{
+	// 游戏对象类型列表
+	TYPE5_IMAGE = 0,
+	TYPE5_BUTTON = 1,
 
+	TYPE5_NUM
+};
 //------------------------------------------------------------------------------
 // Public Structures:
 //------------------------------------------------------------------------------
@@ -27,12 +36,11 @@
 // Public Functions:
 //------------------------------------------------------------------------------
 
-// 关卡2的6个状态函数
-void Load2(void);
-void Ini2(void);
-void Update2(void);
-void Draw2(void);
-void Free2(void);
-void Unload2(void);
+void Load8(void);
+void Ini8(void);
+void Update8(void);
+void Draw8(void);
+void Free8(void);
+void Unload8(void);
 
-#endif
+#endif#pragma once

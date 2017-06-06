@@ -1,6 +1,6 @@
 /* Project:		GSMWin
    File Name:	GameStateManager.h
-   Author:		Áõ·¼
+   Author:		yh
    Date:		
    Purpose:		ÓÎÏ·×´Ì¬¹ÜÀíÆ÷*/
 

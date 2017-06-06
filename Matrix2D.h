@@ -1,3 +1,9 @@
+
+/* Project:
+File Name:	Control1.h
+Author:		“ı∫∆
+Date:
+Purpose:		æÿ’Û‘ÀÀ„  */
 #ifndef MATRIX2D_H
 #define MATRIX2D_H
 

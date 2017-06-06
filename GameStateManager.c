@@ -1,6 +1,6 @@
 /* Project:		GSMWin
    File Name:	GameStateManager.c
-   Author:		¡ı∑º
+   Author:		yh
    Date:		
    Purpose:		GSM  */
 
@@ -10,6 +10,10 @@
 #include "Level1.h"
 #include "Level2.h"
 #include "menu.h"
+#include "Help.h"
+#include "End.h"
+
+
 
 //------------------------------------------------------------------------------
 // Private Consts:
@@ -77,6 +81,26 @@ void GSM_Update(int level)
 				pDraw = Draw2;
 				pFree = Free2;
 				pUnload = Unload2;
+				break;
+			}
+			case GS_Help:
+			{
+				pLoad = Load6;
+				pIni = Ini6;
+				pUpdate = Update6;
+				pDraw = Draw6;
+				pFree = Free6;
+				pUnload = Unload6;
+				break;
+			}
+			case GS_End:
+			{
+				pLoad = Load7;
+				pIni = Ini7;
+				pUpdate = Update7;
+				pDraw = Draw7;
+				pFree = Free7;
+				pUnload = Unload7;
 				break;
 			}
 	}

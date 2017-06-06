@@ -1,3 +1,10 @@
+
+/* Project:
+File Name:	Control1.h
+Author:		“ı∫∆
+Date:
+Purpose:		œÚ¡ø  */
+
 #ifndef VECTOR2_H
 #define VECTOR2_H
 
