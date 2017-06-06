@@ -12,6 +12,8 @@
 #include "menu.h"
 #include "Help.h"
 #include "End.h"
+#include "Win.h"
+#include "Select.h"
 
 
 
@@ -101,6 +103,26 @@ void GSM_Update(int level)
 				pDraw = Draw7;
 				pFree = Free7;
 				pUnload = Unload7;
+				break;
+			}
+			case GS_Win:
+			{
+				pLoad = Load8;
+				pIni = Ini8;
+				pUpdate = Update8;
+				pDraw = Draw8;
+				pFree = Free8;
+				pUnload = Unload8;
+				break;
+			}
+			case GS_Select:
+			{
+				pLoad = Load9;
+				pIni = Ini9;
+				pUpdate = Update9;
+				pDraw = Draw9;
+				pFree = Free9;
+				pUnload = Unload9;
 				break;
 			}
 	}

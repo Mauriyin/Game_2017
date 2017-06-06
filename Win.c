@@ -56,7 +56,7 @@ void Load8(void)
 	pMesh3 = AEGfxMeshEnd();
 	AE_ASSERT_MESG(pMesh3, "Failed to create mesh 4!!");
 	// 载入纹理
-	pTex3 = AEGfxTextureLoad("Gameover.jpg");
+	pTex3 = AEGfxTextureLoad("Gamewin.jpg");
 	AEGfxMeshStart();
 	AEGfxTriAdd(
 		-50.0f, -20.0f, 0x00FF00FF, 0.0f, 1.0f,
@@ -118,7 +118,7 @@ void Free8(void)
 {
 }
 
-void Unload7(void)
+void Unload8(void)
 {
 	// 卸载对象资源	
 	AEGfxMeshFree(pMesh3);

@@ -6,8 +6,8 @@ Author:dhr
 Date:
 Purpose:		主界面显示
 */
-#ifndef _end
-#define _end
+#ifndef _win
+#define _win
 
 //------------------------------------------------------------------------------
 // Typedef:
