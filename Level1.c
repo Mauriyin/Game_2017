@@ -97,10 +97,10 @@ unsigned int phase = 0;
 //战机类型标志  1或2
 static int shipflag = 1;
 //技能有无标志
-static int skillflag = 2;
+static int skillflag = 1;
 static int skillState = 0;
 float bossSpeed = 50.0f;
-int bossHealth = 20;
+int bossHealth = 50;
 //------------------------------------------------------------------------------
 // Private Function Declarations:
 //------------------------------------------------------------------------------
@@ -208,13 +208,13 @@ void Load1(void)
 
 	AEGfxMeshStart();
 	AEGfxTriAdd(
-		-20.5f, -20.5f, 0xFFFFFFFF, 0.0f, 1.0f,
-		20.5f, -20.5f, 0xFFFFFFFF, 1.0f, 1.0f,
-		-20.5f, 20.5f, 0xFFFFFFFF, 0.0f, 0.0f);
+		-50.5f, -50.5f, 0xFFFFFFFF, 0.0f, 1.0f,
+		50.5f, -50.5f, 0xFFFFFFFF, 1.0f, 1.0f,
+		-50.5f, 50.5f, 0xFFFFFFFF, 0.0f, 0.0f);
 	AEGfxTriAdd(
-		20.5f, -20.5f, 0xFFFFFFFF, 1.0f, 1.0f,
-		20.5f, 20.5f, 0xFFFFFFFF, 1.0f, 0.0f,
-		-20.5f, 20.5f, 0xFFFFFFFF, 0.0f, 0.0f);
+		50.5f, -50.5f, 0xFFFFFFFF, 1.0f, 1.0f,
+		50.5f, 50.5f, 0xFFFFFFFF, 1.0f, 0.0f,
+		-50.5f, 50.5f, 0xFFFFFFFF, 0.0f, 0.0f);
 	pObjBase->pMesh = AEGfxMeshEnd();
 
 	AE_ASSERT_MESG(pObjBase->pMesh, "Failed to create Asteroid object!!");
@@ -264,13 +264,13 @@ void Load1(void)
 
 	AEGfxMeshStart();
 	AEGfxTriAdd(
-		-20.5f, -20.5f, 0xFFFFFFFF, 0.0f, 1.0f,
-		20.5f, -20.5f, 0xFFFFFFFF, 1.0f, 1.0f,
-		-20.5f, 20.5f, 0xFFFFFFFF, 0.0f, 0.0f);
+		-50.5f, -50.5f, 0xFFFFFFFF, 0.0f, 1.0f,
+		50.5f, -50.5f, 0xFFFFFFFF, 1.0f, 1.0f,
+		-50.5f, 50.5f, 0xFFFFFFFF, 0.0f, 0.0f);
 	AEGfxTriAdd(
-		20.5f, -20.5f, 0xFFFFFFFF, 1.0f, 1.0f,
-		20.5f, 20.5f, 0xFFFFFFFF, 1.0f, 0.0f,
-		-20.5f, 20.5f, 0xFFFFFFFF, 0.0f, 0.0f);
+		50.5f, -50.5f, 0xFFFFFFFF, 1.0f, 1.0f,
+		50.5f, 50.5f, 0xFFFFFFFF, 1.0f, 0.0f,
+		-50.5f, 50.5f, 0xFFFFFFFF, 0.0f, 0.0f);
 	pObjBase->pMesh = AEGfxMeshEnd();
 
 	AE_ASSERT_MESG(pObjBase->pMesh, "Failed to create Asteroid object!!");
@@ -283,13 +283,13 @@ void Load1(void)
 
 	AEGfxMeshStart();
 	AEGfxTriAdd(
-		-20.5f, -20.5f, 0xFFFFFFFF, 0.0f, 1.0f,
-		20.5f, -20.5f, 0xFFFFFFFF, 1.0f, 1.0f,
-		-20.5f, 20.5f, 0xFFFFFFFF, 0.0f, 0.0f);
+		-50.5f, -50.5f, 0xFFFFFFFF, 0.0f, 1.0f,
+		50.5f, -50.5f, 0xFFFFFFFF, 1.0f, 1.0f,
+		-50.5f, 50.5f, 0xFFFFFFFF, 0.0f, 0.0f);
 	AEGfxTriAdd(
-		20.5f, -20.5f, 0xFFFFFFFF, 1.0f, 1.0f,
-		20.5f, 20.5f, 0xFFFFFFFF, 1.0f, 0.0f,
-		-20.5f, 20.5f, 0xFFFFFFFF, 0.0f, 0.0f);
+		50.5f, -50.5f, 0xFFFFFFFF, 1.0f, 1.0f,
+		50.5f, 50.5f, 0xFFFFFFFF, 1.0f, 0.0f,
+		-50.5f, 50.5f, 0xFFFFFFFF, 0.0f, 0.0f);
 	pObjBase->pMesh = AEGfxMeshEnd();
 
 	AE_ASSERT_MESG(pObjBase->pMesh, "Failed to create Asteroid object!!");
@@ -469,14 +469,14 @@ void Update1(void)
 	// =========================
 	//切换类型战机
 	// =========================
-	if (AEInputCheckTriggered('Q') && (shipflag == 2))
+	if (AEInputCheckTriggered('Z') && (shipflag == 2))
 	{
 		spShip2->flag = 0;
 		spShip1 = gameObjCreate(TYPE_SHIP, SHIP_SIZE, 0, 0, 1.5707f);
 		AE_ASSERT(spShip1);
 		shipflag = 1;
 	}
-	if (AEInputCheckTriggered('W') && (shipflag == 1))
+	if (AEInputCheckTriggered('X') && (shipflag == 1))
 	{
 		spShip1->flag = 0;
 		spShip2 = gameObjCreate(TYPE_SHIP1, SHIP_SIZE, 0, 0, 1.5707f);
@@ -615,7 +615,7 @@ void Update1(void)
 
 	// M键使用技能
 	//技能1：使用导弹
-	if (AEInputCheckTriggered('M') && (shipflag == 1) && skillflag)
+	if (AEInputCheckTriggered('B') && (shipflag == 1) && skillflag)
 	{
 		for (i = 0; i < GAME_OBJ_NUM_MAX; i++)
 		{
@@ -634,7 +634,7 @@ void Update1(void)
 		skillflag--;
 	}
 	//技能2:暂定
-	if (AEInputCheckTriggered('M') && (shipflag == 2) && skillflag)
+	if (AEInputCheckTriggered('B') && (shipflag == 2) && skillflag)
 	{
 		skillState = 1;
 		skillflag--;
@@ -659,7 +659,7 @@ void Update1(void)
 			Vector2DSet(&added, 30.0f * (float)(frameTime)* cosf(pInst->dirCurr), 30.0f * (float)(frameTime)* sinf(pInst->dirCurr));
 			Vector2DAdd(&pInst->posCurr, &pInst->posCurr, &added);
 			pInst->scale = ENEMY_SIZE;
-			if (bul_gap % 60 == 0)
+			if (bul_gap % 50 == 0)
 			{
 				GameObj* pBullet;
 				pBullet = gameObjCreate(TYPE_BULLET1, 3.0f, 0, 0, 0.0f);
@@ -703,7 +703,7 @@ void Update1(void)
 			{
 				bossSpeed = -bossSpeed;
 			}
-			if (bul_gap % 80 == 0) 
+			if (bul_gap % 20 == 0) 
 			{
 				GameObj* pBullet;
 				pBullet = gameObjCreate(TYPE_BULLET1, 3.0f, 0, 0, 0.0f);

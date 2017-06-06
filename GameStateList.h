@@ -1,6 +1,6 @@
 /* Project:		GSMWin
    File Name:	GameStateList.h
-   Author:		刘芳
+   Author:		yh
    Date:		
    Purpose:		游戏状态声明，主要为Game Flow的状态切换所用 */
 
@@ -24,12 +24,15 @@
 //------------------------------------------------------------------------------
 enum
 {
-	GS_L0,
+	GS_L0,               //menu
 	GS_L1,              // Level1
 	GS_L2,              // Level2
 	GS_NUM,             // Total Number
 	GS_Restart,			// Restart
-	GS_Quit				// Quit
+	GS_Quit,				// Quit
+	GS_Help,               //Help
+	GS_End,				//Over
+	GS_Win
 };
 
 int Current, Previous, Next;  // 状态指示器

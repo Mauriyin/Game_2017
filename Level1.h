@@ -1,6 +1,6 @@
 /* Project:		GSMWin
    File Name:	Level1.h
-   Author:		刘芳
+   Author:		yh\ys
    Date:		
    Purpose:		关卡1的属性和函数声明*/
 

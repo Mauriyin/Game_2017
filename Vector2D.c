@@ -1,3 +1,8 @@
+/* Project:
+File Name:	Control1.h
+Author:		阴浩
+Date:
+Purpose:		控制文件：封装一些必要的操作  */
 #include "Vector2D.h"
 
 #define EPSILON 0.0001
