@@ -1,5 +1,0 @@
-# Ignore some test doc
-SmokeTest.c
-test.c
-!ReadMe.md
-
